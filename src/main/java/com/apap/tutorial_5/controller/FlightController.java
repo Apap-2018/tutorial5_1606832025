@@ -1,5 +1,6 @@
 package com.apap.tutorial_5.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,20 +33,48 @@ public class FlightController {
 	
 	@RequestMapping(value = "/flight/add/{licenseNumber}", method = RequestMethod.GET)
 	private String add(@PathVariable(value="licenseNumber") String licenseNumber, Model model) {
-		FlightModel flight = new FlightModel();
 		PilotModel pilot = pilotService.getPilotDetailByLicenseNumber(licenseNumber);
-		flight.setPilot(pilot);
 		
-		model.addAttribute("flight", flight);
+		ArrayList<FlightModel> list = new ArrayList<FlightModel>();
+		
+		list.add(new FlightModel());
+		
+		pilot.setPilotFlight(list);
+		
+		model.addAttribute("pilot", pilot);
+		
 		return "addFlight";
 	}
 	
-	@RequestMapping(value = "/flight/add", method = RequestMethod.POST)
-	private String addFlightSubmit(@ModelAttribute FlightModel flight) {
-		flightService.addFlight(flight);
+	
+	@RequestMapping(value = "/flight/add/{licenseNumber}", method = RequestMethod.POST, params= {"save"})
+	private String addFlightSubmit(@ModelAttribute PilotModel pilot) {
+		PilotModel curr_pilot = pilotService.getPilotDetailByLicenseNumber(pilot.getLicenseNumber());
+		
+		for (FlightModel flight : pilot.getPilotFlight()) {
+			flight.setPilot(curr_pilot);
+			flightService.addFlight(flight);;
+		}
 		return "add";
 	}
 	
+	@RequestMapping(value = "/flight/add/{id}", params= {"addRow"}, method = RequestMethod.POST)
+	private String addRow (@ModelAttribute PilotModel pilot, Model model) {
+		pilot.getPilotFlight().add(new FlightModel());
+		
+		model.addAttribute("pilot", pilot);
+		return "addFlight";
+	}
+	
+
+	@RequestMapping(value="/flight/add/{id}", method = RequestMethod.POST, params={"removeRow"})
+	private String removeRow (@ModelAttribute PilotModel pilot, final BindingResult bindingResult, final HttpServletRequest req, Model model) {
+		final Integer row = Integer.valueOf(req.getParameter("removeRow"));
+		pilot.getPilotFlight().remove(row.intValue());
+		
+		model.addAttribute("pilot", pilot);
+		return "addFlight";
+	}
 	
 	@RequestMapping(value = "/flight/delete", method = RequestMethod.POST)
 	private String deleteFlight(@ModelAttribute PilotModel pilot, Model model) {
@@ -71,5 +100,4 @@ public class FlightController {
 		flightService.updateFlight(flight, idd);
 		return "update";
 	}
-
 }
