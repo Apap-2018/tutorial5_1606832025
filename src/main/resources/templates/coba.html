@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmnls:th="http://www.thymeleaf.org">
+
+<head>
+
+<title>Update Flight</title>
+<object th:include="fragments/fragment :: css" th:remove="tag"></object>
+	<object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+<body>
+	<nav th:replace="fragments/fragment :: navbar (navbarTitle='Coba')"></nav>
+	
+	<table>
+	  <thead>
+	    <tr>
+	      <th th:text="Flight Number">Flight Number</th>
+	      <th th:text="Origin">Origin</th>
+	      <th th:text="Destination">Destination</th>
+	      <th th:text="Time">Time</th>
+	      
+	      <th>
+	        <button type="submit" name="addRow" th:text="#{addRow}">Add row</button>
+	      </th>
+	    </tr>
+	  </thead>
+	<tbody>
+	    <tr th:each="row,rowStat : *{flight}">
+	      <td th:text="${rowStat.count}">1</td>
+	     
+	      <td>
+	        <input type="text" th:field="*{rows[__${rowStat.index}__].flightNumber}" />
+	      </td>
+	      <td>
+	        <input type="text" th:field="*{rows[__${rowStat.index}__].origin}" />
+	      </td>
+	      <td>
+	        <input type="text" th:field="*{rows[__${rowStat.index}__].destination}" />
+	      </td>
+	      <td>
+	        <input type="text" th:field="*{rows[__${rowStat.index}__].time}" />
+	      </td>
+	      <td>
+	        <button type="submit" name="removeRow" 
+	                th:value="${rowStat.index}" th:text="Remove Row">Remove row</button>
+	      </td>
+	    </tr>
+  </tbody>
+</table>
+	
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmnls:th="http://www.thymeleaf.org">
+<head>
+<title>View Flight Detail</title>
+<object th:include="fragments/fragment :: css" th:remove="tag"></object>
+	<object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+<body>
+	<nav th:replace="fragments/fragment :: navbar (navbarTitle='View All Flights')"></nav>
+	
+<h1>All Flights</h1>
+	
+		<div th:each= "pilot : ${pilotList}">
+			<div th:each= "flight : ${pilot.pilotFlight}">
+			
+				<h3 th:text="'Pilot Name : ' + ${pilot.name}"></h3>
+				
+				<h3 th:text="'Pilot licenseNumber : ' + ${pilot.licenseNumber}"></h3>
+			
+				<h3 th:text="'Flight Number : ' + ${flight.flightNumber}"></h3>
+				
+				<h3 th:text="'Origin : ' + ${flight.origin}"></h3>
+				
+				<h3 th:text="'Destination : ' + ${flight.destination}"></h3>
+				
+				<h3 th:text="'Time : ' + ${flight.time}"></h3>
+			</div>
+			<br>
+	
+	</div>
+	
+	
+	
+	
+</body>
+</html>
